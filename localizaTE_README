@@ -1,0 +1,101 @@
+
+===============
+TE discovery
+===============
+0- set localizaTE path
+declare -rx localizaTEpath=/bigdata/rcastanera/shared/marcos/localizaTE-v2
+
+1- cd to genome folder (ie. "Pleostest")
+
+cd /bigdata/castaneralab/shared/pleostest
+
+3- set your environment:
+
+. $localizaTEpath/setEnv.sh
+
+4- Run Repeatmodeler pipeline. This will create a folder named "RModeler" with all the results inside
+
+python $localizaTEpath/launchRmodeler.py pleostest.fasta            # pleostest.fasta is the assembly name
+
+# Check the status of the job:
+
+squeue -u rcastanera   # use your username ie: "gpisabarro" instead
+
+5- run LTR pipeline. This will create a folder named "LTR" with all the results inside
+
+
+touch nohup.out && nohup python $localizaTEpath/launchLTRpipeline.py pleostest.fasta &
+
+
+=========================
+CREATE CONSENSUSES
+=========================
+
+# in Project folder:
+
+bash $localizaTEpath/bin/create_consensus.sh RM_10649.TueApr181106352017
+
+===========
+PASTEC
+===========
+
+# in library folder:
+
+bash $localizaTEpath/bin/prepare_pastec.sh
+
+# adapt configfile and run PASTEC
+  + project_name
+  + project_dir: /bigdata/castaneralab
+
+
+
+nohup PASTEClassifier.py -i Agabi_varbisH97_cleanlib.fa -C PASTEClassifier_parallelized.cfg -p &
+
+# get classified library:
+# Manually revise the "unknown_elements.txt" file to be sure nothing is left and obtain final library, including reference fungal ClassII elements
+
+python $localizaTEpath/bin/GetclassifiedLibrary.py cleanlibrary.fa Project_name.classif
+python $localizaTEpath/bin/create_final_lib.py Project_name
+
+...* renamed.fa: Libraries with their own seqs, with anliasname included
+...* _locTE_v2_RefSeq.fa:  Final libraries with elements from *renamed + ClassII
+Final libraries: /home/rcastanera/Documents/En_curso/CSP_repeats/Libraries/FINAL
+
+
+=======================
+Repeatmasker
+=======================
+
+
+go to REPEATMASKING library and run:
+
+
+sbatch -p batch run_repeatmasker.sh Pleery1.fasta Pleery1_locTE_v2_RefSeq.fa Pleery1  # Use full paths to files (assembly, library, new foldername)
+
+#Example
+
+sbatch -p intel $localizaTEpath/bin/run_repeatmasker.sh /bigdata/castaneralab/shared/CSP_Agaricales/round_2/Armme1_1/Armme1_1.fasta /bigdata/castaneralab/shared/CSP_Agaricales/round_2/Armme1_1/Library/PASTEC/Armme1_1_classified_library_renamed.fa_locTE_v2_RefSeq.fa Armme1_1
+
+
+
+# get statistics
+
+
+perl /home/rcastanera/Documents/INRA_2016/backup_06_12/scripts/scripts_tesis/repeatmasker/parseRM.pl -genlen 30233745 -RMout Agabi_varbisH97_2.fasta.out -lib /home/rcastanera/Documents/En_curso/CSP_repeats/Libraries/FINAL/Agabi_varbisH97_2_locTE_v2_RefSeq.fa
+
+
+# Obtain annotation in gff format
+
+python /home/rcastanera/Documents/INRA_2016/backup_06_12/scripts/scripts_tesis/scripts_pipeline/postprocessing/RMout2gff.copies.py Macfu1.fasta.out Macfu1.locTE_v2.gff
+
+=======================
+Reconstruct fragments
+=======================
+
+grep 'alias' ..out # to recover only TE hits
+
+Use ReannotaTE
+
+then parse with python --REVISAR
+
+/home/rcastanera/Documents/En_curso/CSP_repeats/RMout/RM_oufiles/test/prueba_1.gff

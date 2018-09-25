@@ -1,0 +1,14 @@
+paths = dict(
+    localizaTEv2 = '/bigdata/castaneralab/shared/marcos/localizaTE-v2/',
+    shared = '/bigdata/castaneralab/shared/marcos/',
+    projectFolder = '/bigdata/castaneralab/shared/marcos/slurm/pleos3/',
+    BioCluster = dict(
+        localizaTEv2 = '/bigdata/castaneralab/shared/marcos/localizaTE-v2/',
+        shared = '/bigdata/castaneralab/shared/marcos/',
+        projectFolder = '/bigdata/castaneralab/shared/marcos/'
+    )
+),
+localizaTEv2 = '/bigdata/castaneralab/shared/marcos/localizaTE-v2/',
+projectPath = '/bigdata/castaneralab/shared/marcos/slurm/pleos4',
+projectName = 'pleostest',
+projectFile = 'pleostest.fa'

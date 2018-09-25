@@ -1,0 +1,7 @@
+genometools
+ncbi-blast
+usearch
+bedtools
+repet
+trf
+hmmer
