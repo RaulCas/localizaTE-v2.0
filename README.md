@@ -18,14 +18,14 @@ $ sudo pip install -r requirements.txt
 
 
 ### 1. Edit config.py
-
-declare -rx localizaTEpath=/bigdata/castaneralab/shared/marcos/localizaTE-v2
-declare -rx projectPath=/bigdata/castaneralab/shared/marcos/slurm/pleos6
+```bash
+declare -rx localizaTEpath=#Path to localizaTe
+declare -rx projectPath=#path to project
 declare -rx projectName=pleostest
 declare -rx projectFile=$projectName.fa
 
 . $localizaTEpath/setEnv.sh
-
+```
 
 ### 2. Launch LTR
 ```bash
